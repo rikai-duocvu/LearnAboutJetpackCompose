@@ -1,16 +1,27 @@
 package com.example.learnaboutjetpackcompose
 
+import android.icu.text.ListFormatter.Width
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.MaterialTheme
@@ -19,6 +30,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
@@ -48,11 +61,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun HomeScreen(){
     Column (modifier = Modifier.padding(24.dp)) {
-        BannerCompose(contentScale = ContentScale.Crop)
-        Spacer(modifier = Modifier.height(12.dp))
-        BannerCompose(contentScale = ContentScale.Fit)
-        Spacer(modifier = Modifier.height(12.dp))
-        BannerCompose(contentScale = ContentScale.Inside)
+        BannerCompose()
+        Spacer(Modifier.padding(10.dp))
+        CircleAvatar()
     }
 
 }
@@ -94,15 +105,34 @@ fun GreetingPreview() {
 }
 
 @Composable
-fun BannerCompose(contentScale: ContentScale){
+fun BannerCompose() {
     Image(
         painter = painterResource(id = R.drawable.banner),
         contentDescription = null,
         modifier = Modifier
-            .fillMaxWidth()
-            .height(150.dp)
-
+            .width(350.dp) // Cố định chiều rộng
+            .wrapContentHeight(), // Tự động điều chỉnh chiều cao
+        contentScale = ContentScale.FillWidth // Kéo dài ảnh để lấp đầy chiều rộng
     )
+}
+
+
+@Composable
+fun CircleAvatar() {
+    Surface(
+        modifier = Modifier.border(
+            BorderStroke(
+                2.dp,
+                color = Color.Gray
+            ), shape = CircleShape).clip(shape = CircleShape)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.avatar),
+            contentDescription = "circle avatar",
+            contentScale = ContentScale.Inside
+            )
+    }
+
 }
 
 @Composable
