@@ -1,49 +1,35 @@
 package com.example.learnaboutjetpackcompose
 
-import android.icu.text.ListFormatter.Width
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonElevation
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.ColorPainter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.learnaboutjetpackcompose.ui.theme.LearnAboutJetpackComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -61,39 +47,125 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun HomeScreen(){
     Column (modifier = Modifier.padding(24.dp)) {
-        BannerCompose()
-        Spacer(Modifier.padding(10.dp))
-        CircleAvatar()
+        SimpleButton()
+        Spacer(modifier = Modifier.padding(24.dp))
+        DisableSimpleButton()
+        Spacer(modifier = Modifier.padding(24.dp))
+        RoundedConnerButton()
+        Spacer(modifier = Modifier.padding(24.dp))
+        BorderSimpleButton()
+        Spacer(modifier = Modifier.padding(24.dp))
+        ElevationSimpleButton()
+        Spacer(modifier = Modifier.padding(24.dp))
+        DemoClickModifire()
+        Spacer(modifier = Modifier.padding(24.dp))
+        DemoDetectClick()
     }
 
 }
-val customH1 :TextStyle
-    get() = TextStyle(
-        color = Color.Magenta,
-
-    )
 
 @Composable
-fun Greeting() {
-    Text(
-        text = stringResource(id = R.string.test_text),
-        maxLines = 1,
-        style = customH1
-    )
+fun SimpleButton(){
+    val count = remember {
+        mutableStateOf(0)
+    }
+    Text("So lan click: ${count.value}")
+    Button (onClick = {
+        count.value++
+    },
+        colors = ButtonDefaults.buttonColors(
+            Color.Green,
+            contentColor = Color.White
+        )
+    ){
+        Column {
+            Icon(Icons.Default.ShoppingCart, contentDescription = null)
+            Text("Click me")
+        }
+    }
 }
 
 @Composable
-fun MultipleStyle(){
-    Text( text = buildAnnotatedString {
-        withStyle( style = SpanStyle(color = Color.Blue)){
-            append("H")
+fun RoundedConnerButton(){
+    Row {
+        Button(onClick = {},
+            shape = RoundedCornerShape(topStart = 15.dp, bottomStart = 15.dp)
+        ) {
+            Text("Rounded Left")
         }
-        append("ello")
-        withStyle( style = SpanStyle(color = Color.Red)){
-            append("D")
+        Button(onClick = {},
+            shape = RoundedCornerShape(topEnd = 15.dp, bottomEnd = 15.dp)
+        ) {
+            Text("Rounded Right")
         }
-        append("uoc!")
+    }
+
+}
+
+@Composable
+fun BorderSimpleButton (){
+    Button(onClick = {},
+        border = BorderStroke(width = 2.dp, color = Color.Magenta),
+        colors = ButtonDefaults.buttonColors(
+            Color.White
+        )
+    ) {
+        Text("Border Click" , color = Color.Magenta)
+    }
+}
+
+@Composable
+fun DisableSimpleButton(){
+    Button(onClick = {},
+        colors = ButtonDefaults.buttonColors(
+            Color.Gray,
+            disabledContentColor = Color.White
+        ),
+        enabled = false
+    ) {
+        Text("Disable Button")
+    }
+}
+
+@Composable
+fun ElevationSimpleButton(){
+    Button(onClick = {},
+        colors = ButtonDefaults.buttonColors(
+            Color.White
+        ),
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = 10.dp,
+            pressedElevation = 15.dp,
+            disabledElevation = 0.dp
+        )
+    ) {
+        Text("Shadow Button", color = Color.Black)
+    }
+}
+
+@Composable
+fun DemoClickModifire(){
+    Text("click me" , modifier = Modifier.clickable {
+
     })
+}
+
+@Composable
+fun DemoDetectClick(){
+    val textContent = remember {
+        mutableStateOf("")
+    }
+    Column {
+        Text(textContent.value)
+        Text("something", modifier = Modifier.pointerInput(Unit) {
+            detectTapGestures (
+                onDoubleTap = {textContent.value = "Double Tap"},
+                onTap = {textContent.value = "One Tap"},
+                onPress = {textContent.value = "on Press"},
+                onLongPress = {textContent.value = "on Long Press"}
+            )
+        })
+    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -104,43 +176,4 @@ fun GreetingPreview() {
     }
 }
 
-@Composable
-fun BannerCompose() {
-    Image(
-        painter = painterResource(id = R.drawable.banner),
-        contentDescription = null,
-        modifier = Modifier
-            .width(350.dp) // Cố định chiều rộng
-            .wrapContentHeight(), // Tự động điều chỉnh chiều cao
-        contentScale = ContentScale.FillWidth // Kéo dài ảnh để lấp đầy chiều rộng
-    )
-}
 
-
-@Composable
-fun CircleAvatar() {
-    Surface(
-        modifier = Modifier.border(
-            BorderStroke(
-                2.dp,
-                color = Color.Gray
-            ), shape = CircleShape).clip(shape = CircleShape)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.avatar),
-            contentDescription = "circle avatar",
-            contentScale = ContentScale.Inside
-            )
-    }
-
-}
-
-@Composable
-fun vectorImageComponent(){
-    Image(imageVector = Icons.Filled.Person, contentDescription = "Person" )
-}
-
-@Composable
-fun CustomPainterImageCompose(){
-    Image( ColorPainter(Color.Red) , contentDescription = null)
-}
